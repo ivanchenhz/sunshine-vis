@@ -1,0 +1,11 @@
+{
+  "name": "sunshine-vis",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "dev:svelte": "pnpm -C ./packages/svelte dev",
+    "build:svelte": "pnpm -C ./packages/svelte build"
+  },
+  "author": "Ivan Chen",
+  "license": "ISC"
+}
