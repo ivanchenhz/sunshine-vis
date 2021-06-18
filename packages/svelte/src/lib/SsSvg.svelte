@@ -3,25 +3,41 @@
   import { writable } from 'svelte/store'
   import { select } from 'd3-selection'
 
-  export let padding
+  export let width
+  export let height
+  export let padding = {
+    top: 16,
+    right: 24,
+    bottom: 16,
+    left: 24,
+  }
+  export let center = {
+    x: 0.5,
+    y: 0.5,
+  }
 
-  let canvasRef
-  let clientWidth
-  let clientHeight
+  let canvasRef = null
+  let bounds = null
+  $: dimensions = {
+    padding,
+
+    width: 0,
+    height: 0,
+    boundedWidth: 0,
+    boundedHeight: 0,
+  }
 
   let svgContext = writable({
-    dimensions: null,
-    canvas: null,
-    bounds: null,
+    dimensions,
+    center,
+    bounds,
   })
   setContext('svgContext', svgContext)
 
-  export let dimensions = {
-    padding: {
-      top: 16,
-      right: 24,
-      bottom: 16,
-      left: 24,
+  function initCenter() {
+    $svgContext.center = {
+      ...$svgContext.center,
+      ...center,
     }
   }
 
@@ -30,8 +46,9 @@
       ...dimensions.padding,
       ...padding
     }
-    dimensions.width = clientWidth
-    dimensions.height = clientHeight
+
+    dimensions.width = width
+    dimensions.height = height
     dimensions.boundedWidth = dimensions.width
       - dimensions.padding.left
       - dimensions.padding.right
@@ -44,10 +61,6 @@
 
   function drawCanvas() {
     const canvas = select(canvasRef)
-      .append('svg')
-      .attr('width', dimensions.width)
-      .attr('height', dimensions.height)
-
     const bounds = canvas.append('g')
       .style('transform', `translate(${
         dimensions.padding.left
@@ -55,18 +68,17 @@
         dimensions.padding.top
       }px)`)
 
-    $svgContext.canvas = canvas
     $svgContext.bounds = bounds
   }
 
   onMount(() => {
+    initCenter()
     initDimensions()
     drawCanvas()
   })
 
 </script>
 
-<div class="{$$props.class}" style="{$$props.style}"
-     bind:this={canvasRef} bind:clientWidth={clientWidth} bind:clientHeight={clientHeight}>
-    <slot></slot>
-</div>
+<svg {width} {height} {...$$restProps} bind:this={canvasRef}>
+  <slot></slot>
+</svg>

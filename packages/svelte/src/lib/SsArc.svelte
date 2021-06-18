@@ -9,7 +9,8 @@
   export let startAngle;
   export let endAngle;
   export let padAngle = 2;
-  export let cornerRadius;
+  export let cornerRadius = 0;
+  export let center = {}
 
   let arcGenerator
 
@@ -24,18 +25,23 @@
 
   function drawArc() {
     const dimensions = $svgContext.dimensions
+    const { boundedWidth, boundedHeight } = dimensions
+    const arcCenter = {
+      ...$svgContext.center,
+      ...center
+    }
 
     arcGenerator = arc()
-      .innerRadius(dimensions.boundedHeight / 2 * innerRadius)
-      .outerRadius(dimensions.boundedHeight / 2 * outerRadius)
+      .innerRadius(boundedHeight / 2 * innerRadius)
+      .outerRadius(boundedHeight / 2 * outerRadius)
       .startAngle(startAngle * (Math.PI * 2) / 360).endAngle(endAngle * (Math.PI * 2) / 360)
       .padAngle(padAngle * (Math.PI * 2) / 360).cornerRadius(cornerRadius)
 
     const path = $svgContext.bounds.append('path')
       .style('transform', `translate(${
-        dimensions.boundedWidth / 2
+        boundedWidth * arcCenter.x
       }px, ${
-        dimensions.boundedHeight / 2
+        boundedHeight * arcCenter.y
       }px)`)
       .attr('d', arcGenerator())
       .attr('fill', 'currentColor')
