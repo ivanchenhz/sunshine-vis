@@ -1,5 +1,8 @@
-<script lang="ts">
-  import * as d3 from 'd3'
+<script>
+  import { scaleTime, scaleLinear } from 'd3-scale'
+  import { line } from 'd3-shape'
+  import { timeParse } from 'd3-time-format'
+  import { extent } from 'd3-array'
 
   import { getContext, onMount, tick } from 'svelte'
 
@@ -23,20 +26,20 @@
   })
 
   function init() {
-    xAccessor = d => timeFormat ? d3.timeParse(timeFormat)(d[xKey]) : d => d[xKey]
+    xAccessor = d => timeFormat ? timeParse(timeFormat)(d[xKey]) : d => d[xKey]
     yAccessor = d => d[yKey]
 
-    xScale = d3.scaleTime()
-      .domain(d3.extent(dataset, xAccessor))
+    xScale = scaleTime()
+      .domain(extent(dataset, xAccessor))
       .range([0, $svgContext.dimensions.boundedWidth])
 
-    yScale = d3.scaleLinear()
-      .domain(d3.extent(dataset, yAccessor))
+    yScale = scaleLinear()
+      .domain(extent(dataset, yAccessor))
       .range([$svgContext.dimensions.boundedHeight, 0])
   }
 
   function drawLine() {
-    lineGenerator = d3.line()
+    lineGenerator = line()
       .x(d => xScale(xAccessor(d)))
       .y(d => yScale(yAccessor(d)))
 

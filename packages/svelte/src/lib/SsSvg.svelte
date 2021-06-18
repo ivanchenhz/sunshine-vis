@@ -1,7 +1,7 @@
 <script>
   import { onMount, setContext } from 'svelte'
   import { writable } from 'svelte/store'
-  import * as d3 from 'd3'
+  import { select } from 'd3-selection'
 
   export let padding
 
@@ -43,7 +43,7 @@
   }
 
   function drawCanvas() {
-    const canvas = d3.select(canvasRef)
+    const canvas = select(canvasRef)
       .append('svg')
       .attr('width', dimensions.width)
       .attr('height', dimensions.height)

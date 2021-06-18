@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { arc } from 'd3'
-
+  import { arc } from 'd3-shape'
   import { getContext, onMount, tick } from 'svelte'
 
   const svgContext = getContext('svgContext')
