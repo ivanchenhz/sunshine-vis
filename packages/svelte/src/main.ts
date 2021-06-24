@@ -1,4 +1,4 @@
-import 'virtual:windi.css'
+import './index.css'
 import Playground from './Playground.svelte'
 
 const playground = new Playground({
