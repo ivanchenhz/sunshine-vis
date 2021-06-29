@@ -1,5 +1,5 @@
 import './index.css'
-import Playground from './Playground.svelte'
+import Playground from './playground/Playground.svelte'
 
 const playground = new Playground({
   target: document.getElementById('playground')

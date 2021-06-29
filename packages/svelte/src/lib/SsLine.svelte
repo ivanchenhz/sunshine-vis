@@ -1,6 +1,6 @@
 <script>
   import { scaleTime, scaleLinear } from 'd3-scale'
-  import { line } from 'd3-shape'
+  import { line, curveMonotoneX } from 'd3-shape'
   import { timeParse } from 'd3-time-format'
   import { extent } from 'd3-array'
 
@@ -26,10 +26,10 @@
   })
 
   function init() {
-    xAccessor = d => timeFormat ? timeParse(timeFormat)(d[xKey]) : d => d[xKey]
+    xAccessor = timeFormat ? d => timeParse(timeFormat)(d[xKey]) : d => d[xKey]
     yAccessor = d => d[yKey]
 
-    xScale = scaleTime()
+    xScale = (timeFormat ? scaleTime() : scaleLinear())
       .domain(extent(dataset, xAccessor))
       .range([0, $svgContext.dimensions.boundedWidth])
 
@@ -42,9 +42,13 @@
     lineGenerator = line()
       .x(d => xScale(xAccessor(d)))
       .y(d => yScale(yAccessor(d)))
+      .curve(curveMonotoneX)
+
+    const _line = lineGenerator(dataset)
+
 
     const path = $svgContext.bounds.append('path')
-      .attr('d', lineGenerator(dataset))
+      .attr('d', _line)
       .attr('fill', 'none')
       .attr('stroke', 'currentColor')
 
