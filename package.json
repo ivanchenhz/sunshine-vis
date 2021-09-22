@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "dev:svelte": "pnpm -C ./packages/svelte dev",
-    "build:svelte": "pnpm -C ./packages/svelte build"
+    "build:svelte": "pnpm -C ./packages/svelte build",
+    "dev:vue": "pnpm -C ./packages/vue dev",
+    "build:vue": "pnpm -C ./packages/vue build"
   },
   "author": "Ivan Chen",
   "license": "ISC"
